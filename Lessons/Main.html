@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CS-Math</title>
+        <style>
+            body {
+                background-color: #DDD;
+            }
+            #content {
+                background-color: #FFF;
+                margin: 0 auto;
+                width: 80%;
+                max-width: 960px;
+                padding: 5px 15px;
+                border: 1px solid #222;
+                border-radius: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="content"></div>
+        <script src="Markdown.Converter.js"></script>
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+            showProcessingMessages: false,
+            tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] },
+            TeX: { equationNumbers: {autoNumber: "AMS"} }
+          });
+        </script>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script>
+            (function () {
+                var converter = new Markdown.Converter();
+                var contentDiv = document.getElementById("content");
+
+                function renderText(text) {
+                    contentDiv.innerHTML = converter.makeHtml(text);
+								    MathJax.Hub.Queue(["Typeset", MathJax.Hub, contentDiv],
+                        ["resetEquationNumbers", MathJax.InputJax.TeX]);
+                }
+
+                function loadTextFromFile(file) {
+                    var client = new XMLHttpRequest();
+                    client.open('GET', file);
+                    client.onreadystatechange = function () {
+                        renderText(client.responseText);
+                    }
+                    client.send();
+                }
+                if(location.search.length <= 1)
+                    loadTextFromFile("Main.md");
+                else
+                    loadTextFromFile(location.search.slice(1) + ".md");
+            })();
+        </script>
+    </body>
+</html>
